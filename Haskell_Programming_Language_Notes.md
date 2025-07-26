@@ -1022,7 +1022,7 @@ Bir **type class** soyut bir arayüz tanımladığı için, bir tür birçok tü
 
 **Haskell'deki Type Class Hiyerarşisi:**
 
-![Haskell Type Classes](/home/ahmet/Downloads/hs-type-classes.png)
+![Haskell Type Classes](/home/ahmet/Haskell/Functional Programming/img/hs-type-classes.png)
 
 
 
@@ -1123,7 +1123,7 @@ addVectors (x1, y1) (x2, y2) = (x1 + x2, y1 + y2)
 >* parsing:
 >
 >  	- (x1, y1) : (3, 5) -> x1 : 3, y1 : 5 
-> 	 	 	 	 	
+> 	 	 	 	 	 	 	
 >  	- (x2, y2) : (4, 2) -> x2 : 4, y2 : 2
 >
 > - output:
