@@ -1,5 +1,30 @@
 # Haskell Programming Language Notes
 
+---
+
+
+**Hazırlayan:**
+
+***Ahmet Özdemir***
+
+Gebze Teknik Üniversitesi - Bilgisayar Mühendisliği
+
+
+
+**Kullanım Koşulları ve Lisans:** Bu doküman, Haskell programlama dili üzerine hazırlanmış kişisel notları içermektedir. Notların büyük bir bölümü kaynaklar bölümünde belirtilen kitaptan alıntıdır. Bu notlar, akademik ve kişisel kullanım için hazırlanmış olup, bilgi paylaşımını ve işbirliğini teşvik etmek amacıyla herkese açıktır.
+
+Notlar, **kaynak belirtildiği sürece istenildiği gibi paylaşılabilir, dağıtılabilir ve üzerinde değişiklik yapılabilir.** Türetilmiş çalışmaların da aynı serbest paylaşım koşulları altında yayınlanması rica olunur.
+
+
+
+**Kaynaklar:**
+
+- Learn You a Haskell for Great Good! by Miran Lipovača 
+- [haskell.org](https://haskell.org)
+- Gemini
+
+---
+
 
 
 ## Chapter 1: Introduction
@@ -326,7 +351,7 @@ Tabii range kullanımında derleyici her kompleks örüntüyü anlayıp buna gö
 
 ---
 
-> **Not:** 20'den 1'e kadar sayıları elde etmek istediğinizde bunu `[20..1]` şeklinde yazmamalıyız, çünkü derleyicinin yaptığı ilk işlemlerden biri verilen sayıların ilkinin birincisinden büyük olup olmamasıdır. Böyle bir durumda direkt boş bir liste elde ederiz. İstediğimizi yapabilmek için ` [20,19..1]` gibi bir direktif vermeliyiz.
+> **Not:** 20'den 1'e kadar sayıları elde etmek istediğinizde bunu `[20..1]` şeklinde yazmamalıyız, çünkü derleyicinin yaptığı ilk işlemlerden biri verilen sayıların ilkinin birincisinden büyük olup olmadoğını kontrol etmesidir. Böyle bir durumda direkt boş bir liste elde ederiz. İstediğimizi yapabilmek için ` [20,19..1]` gibi bir direktif vermeliyiz.
 
 ---
 
@@ -968,7 +993,7 @@ ghci> :t (*)
 (*) :: (Num a) => a -> a -> a
 ```
 
-Bu, ***** fonksiyonunun iki sayı kabul ettiğini ve aynı türde bir sayı döndürdüğünü gösterir. Bu tür kısıtlaması nedeniyle, `(5 :: Int) * (6 :: Integer)` bir tür hatasına neden olurken, `5 * (6 :: Integer)` sorunsuz çalışacaktır. 5, hem **Integer** hem de **Int** gibi davranabilir, ancak aynı anda ikisi birden olamaz. **Num**'ın bir örneği olması için, bir türün **Show** ve **Eq**.'da zaten bulunması gerekir.
+Bu, * fonksiyonunun iki sayı kabul ettiğini ve aynı türde bir sayı döndürdüğünü gösterir. Bu tür kısıtlaması nedeniyle, `(5 :: Int) * (6 :: Integer)` bir tür hatasına neden olurken, `5 * (6 :: Integer)` sorunsuz çalışacaktır. 5, hem **Integer** hem de **Int** gibi davranabilir, ancak aynı anda ikisi birden olamaz. **Num**'ın bir örneği olması için, bir türün **Show** ve **Eq**.'da zaten bulunması gerekir.
 
 
 
@@ -1124,7 +1149,7 @@ addVectors (x1, y1) (x2, y2) = (x1 + x2, y1 + y2)
 >* parsing:
 >
 >  	- (x1, y1) : (3, 5) -> x1 : 3, y1 : 5 
-> 	 	 	 	 	 	 	 	 	
+> 	 	 	 	 	 	 	 	 	 	 	 	 	
 >  	- (x2, y2) : (4, 2) -> x2 : 4, y2 : 2
 >
 > - output:
@@ -1580,4 +1605,180 @@ Bu fonksiyon, önceki örnektekine benzer şekilde çalışır, ancak tanımlama
 
 
 ## Chapter 5: Recursion
+
+Bilindiği üzere recursion bir fonksiyonun kendi kendisini çağırma işlemine denir. Haskell gibi saf bir fonksiyonel dilde bu tanım daha da önem kazanmaktadır. Recursive dizayn edilen fonksiyonların temel stratejisi; üzerinde çalışılan problemleri sürekli alt parçalara bölüp (base case'e kadar) daha sonra bu küçük parçalardan yola çıkarak en üst duruma ulaşılmasıdır diyebiliriz.
+
+​	Matematikteki tanımlamalar sıklıkla recursivedir. Yani aslında bir recursive fonksiyon tanımlamak için aslında yapmamız gereken şunlardır:
+
+- Base case'leri belirlemek.
+- Problemleri uygun alt parçalara bölecek stratejiyi uygulamak.
+
+Bunları klasik Fibonacci dizisi üzerinde uygularsak, şu şekilde olur:
+
+* Base case'leri, serinin en tabandaki değerleri kabul edebiliriz. Çünkü bu örnekte Fibonacci dediğimiz seri kendisinden önceki iki sayının toplamını veren dizi olarak tanımlanır. İlk iki değerin "önceki iki sayı" gibi bir olguya sahip olmadığını düşünürsek burada bunları base case olarak seçmek stratejiyi uygulamak açısından önemlidir.
+* Burada örnek basittir, sadece iki önceki sayıyı toplar ve geçerli elemana bunu atarız.
+
+O halde matematiksel tanımımız şu şekilde olur: `F(n) = F(n - 1) + F(n - 2) where F(0) = 0 and F(1) = 1`. 
+
+
+
+> Haskell'de **recursion** (özyineleme) önemlidir çünkü imperative dillerin aksine, Haskell'de hesaplamaları bir şeyin ne olduğunu belirterek yaparsınız, nasıl hesaplayacağınızı belirtmek yerine. Bu nedenle Haskell, bilgisayarınıza yürütülmesi gereken bir dizi adım vermekle ilgili değildir; bunun yerine, istenen sonucun ne olduğunu, genellikle özyinelemeli bir şekilde, **doğrudan tanımlamakla** ilgilidir.
+
+
+
+Şimdi konuyu daha net kavramak adına Haskell'deki **maximum** fonksiyonunu ele alalım. Bu fonksiyon verilen dizideki en büyük elemanı bulur ve bize döner. Problemi recursive olarak düşünmeden önce imperative bir dilde bunu nasıl çözebileceğimizi düşünelim, dizi üzerinde gezinir ve elimizde "max" eleman ile o anki indeksin gösterdiği değeri karşılaştırırız. Bu işlemden sonra eğer indeksin gösterdiği değer daha büyükse o artık yeni "max" value olur. Tamam, şimdi bunu recursive olarak düşünelim. Öncelikle bir base case bulmamız gerekiyor: singleton bir listenin maksimum değerinin, içindeki tek öğeye eşit olduğunu söyleriz. Peki ya listenin birden fazla öğesi varsa? O zaman hangisinin daha büyük olduğunu kontrol ederiz: ilk öğe (head) mi yoksa listenin geri kalanının maksimum değeri (tail) mi? İşte yinelemeli maksimum fonksiyonumuzun kodu:
+
+```haskell
+maximum' :: (Ord a) => [a] -> a
+maximum' [] = error "maximum of empty list!"
+maximum' [x] = x
+maximum' (x:xs) = max x (maximum' xs)
+```
+
+görüldüğü üzere pattern matching recursive fonksiyonlarda oldukça kullanışlıdır. Burada base case'leri karşılayan patternler şunlardır:
+
+- []
+- [x]
+
+`(x:xs)` bu pattern de recursive fonksiyonunun yineleme kısmını oluşturur. Bunu yapmak için listeyi sürekli [head:tail] olarak ayırır ve **head** kısmını 2. base case'i karşılayabilmesi adına test eder. Test kısmını da ***max*** fonksiyonu ile gerçekleştiririz.
+
+**Sample scenario: [2, 5, 1]**
+
+```haskell
+maximum' [2, 5, 1] 
+	= max 2 (maximum' [5, 1]) 
+	= max 2 (max 5 (maximum' [1])) 
+	= max 2 (max 5 1) 
+	= max 2 5 
+	= 5
+```
+
+---
+
+
+
+### A Few More Recursive Functions
+
+**replicate:**
+
+```haskell
+replicate' :: Int -> a -> [a]
+replicate' n x
+| n <= 0    = []
+| otherwise = x : replicate' (n-1) x
+```
+
+Burada patternler yerine guards kullandık çünkü bir Boolean condition test ediyoruz.
+
+
+
+**take:**
+
+```haskell
+take' :: (Num i, Ord i) => i -> [a] -> [a]
+take' n _			-- verilen liste farketmeksizin eğer n <= 0 ise boş liste dönülür
+	| n <= 0 = []
+take' _ []   = []   -- verilen n farketmeksizin eğer liste boşsa boş liste dönülür
+take' n (x:xs) = x : take' (n-1) xs
+```
+
+Üçüncü pattern, listeyi bir head ve bir tail olmak üzere ikiye ayırır. Head'e x ve tail'e xs adını veririz. Ardından, bir listeden n eleman almanın, ilk elemanı x ve kalan elemanları xs'ten n-1 eleman olan bir liste oluşturmakla aynı şey olduğunu belirtiriz.
+
+> Burada 3. patternde **: (cons)** operatörünün list constructor olduğunu unutmayın. Yani her çağrıda aslında bir element elde ederiz ve bu operatör sayesinde bu elemanları bir liste haline getiririz.
+
+
+
+**reverse:**
+
+```haskell
+reverse' :: [a] -> [a]
+reverse' [] = []
+reverse' (x:xs) = reverse' xs ++ [x]
+```
+
+burada base case çok barizdir. Recursive pattern'da da her seferinde head ve tail ayrımı yaparız ardından, tail kısmı boş liste olana kadar elde ettiğimiz tekil x değerlerini liste haline getirip birleştiririz.
+
+```haskell
+reverse' [1,2,3] = 
+reverse' [2,3] ++ [1] 
+		 = (reverse' [3] ++ [2]) ++ [1] 
+		 = ((reverse' [] ++ [3]) ++ [2]) ++ [1] 
+		 = (([] ++ [3]) ++ [2]) ++ [1] 
+		 = ([3] ++ [2]) ++ [1] 
+		 = [3,2] ++ [1] 
+		 = [3,2,1]
+```
+
+
+
+**repeat:**
+
+```haskell
+repeat' :: a -> [a]
+repeat' x = x:repeat' x
+```
+
+Bu, sonsuz listeler oluşturmak için bir base case'i olmayan özyinelemeyi nasıl başarılı bir şekilde kullanabileceğimize dair güzel bir örnektir; tek yapmamız gereken, bunları bir yerde kesip çıkarmaktır.
+
+
+
+**zip:**
+
+```haskell
+zip' :: [a] -> [b] -> [(a,b)]
+zip' _ [] = []
+zip' [] _ = []
+zip' (x:xs) (y:ys) = (x,y):zip' xs ys
+```
+
+
+
+**elem:**
+
+```haskell
+elem' :: (Eq a) => a -> [a] -> Bool
+elem' a [] = False
+elem' a (x:xs)
+	| a == x    = True
+	| otherwise = a `elem'` xs
+```
+
+
+
+**Quicksort with Haskell Recursively:**
+
+```haskell
+quicksort :: (Ord a) => [a] -> [a]
+quicksort [] = []
+quicksort (x:xs) =
+	let smallerOrEqual = [a | a <- xs, a <= x]
+		larger         = [a | a <- xs, a >  x]
+	in quicksort smallerOrEqual ++ [x] ++ quicksort larger
+```
+
+---
+
+
+
+### Thinking Recursively
+
+Bu bölümde recursion'ı epey kullandık ve muhtemelen fark ettiğiniz gibi, bunun bir pattern'ie var. Bir temel durum tanımlayarak başlıyorsunuz: girdi önemsiz olduğunda geçerli olan basit, özyinelemesiz bir çözüm. Örneğin, boş bir listeyi sıralamanın sonucu boş listedir, çünkü başka ne olabilir ki?
+
+​	Ardından, probleminizi bir veya daha fazla alt probleme böler ve aynı fonksiyonu uygulayarak bunları recursive olarak çözersiniz. Ardından, çözülen bu alt problemlerden nihai çözümünüzü oluşturursunuz. Örneğin, sıralama yaparken listemizi iki listeye ve bir pivota böldük. Bu listelerin her birini, aynı fonksiyonu uygulayarak ayrı ayrı sıraladık. Sonuçları elde ettiğimizde, bunları tek bir büyük sıralı listede birleştirdik.
+
+​	Recursion'a yaklaşmanın en iyi yolu, temel durumları belirlemek ve eldeki problemi benzer ama daha küçük bir şeye nasıl bölebileceğinizi düşünmektir. Temel durumları ve alt problemleri doğru seçtiyseniz, her şeyin nasıl gerçekleşeceğinin ayrıntılarını düşünmenize bile gerek kalmaz. Alt problemlerin çözümlerinin doğru olduğuna güvenebilir ve ardından nihai çözümlerinizi bu daha küçük çözümlerden oluşturabilirsiniz.
+
+---
+
+
+
+## Chapter 6: Higher - Order Functions
+
+
+
+
+
+
+
+
 

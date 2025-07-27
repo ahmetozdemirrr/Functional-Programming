@@ -1,0 +1,25 @@
+# Top-most EditorConfig file
+root = true
+
+# Default settings for all files
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+# Settings for C files (*.c, *.h) - override to ensure spaces
+[*.{c,h}]
+indent_style = space
+indent_size = 4
+
+# Settings for other common file types (optional, adjust as needed)
+[*.{Makefile}]
+indent_style = space
+indent_size = 4
+
+# Ignore binary files
+[*.{png,jpg,jpeg,gif,ico,bin,exe,o,so,a}]
+editorconfig-ignore = true
